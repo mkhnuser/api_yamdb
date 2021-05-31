@@ -1,0 +1,2 @@
+class UserViewSet:
+    pass
