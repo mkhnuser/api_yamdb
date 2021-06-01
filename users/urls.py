@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework import routers
 from django.urls import path
-from . import view as user_views
+from . import views as user_views
 
 
 router = routers.DefaultRouter()
