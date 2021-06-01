@@ -1,9 +1,11 @@
+from django.urls import include, path
 from rest_framework import routers
-from django.urls import path, include
+
 from . import views as title_views
 
-
 router = routers.DefaultRouter()
+
+"""
 router.register(
     r'titles/<title_id:int>/reviews',
     title_views.ReviewViewSet,
@@ -29,7 +31,7 @@ router.register(
     title_views.TitleViewSet,
     basename='titles'
 )
-
+"""
 
 urlpatterns = [
     path('', include(router.urls)),

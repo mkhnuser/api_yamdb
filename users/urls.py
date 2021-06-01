@@ -3,7 +3,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from rest_framework import routers
-from django.urls import path
+from django.urls import path, include
 from . import views as user_views
 
 
@@ -16,7 +16,7 @@ router.register(
 
 
 urlpatters = [
-    path('', router.urls),
+    path('', include(router.urls)),
     path('token/', TokenObtainPairView.as_view(), name='token-obtain'),
     path(
         'token/refresh/',
