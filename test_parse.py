@@ -1,3 +1,6 @@
+"""
+Цель этого файла - заменить sqlite3 client. Здесь можно писать SQL запросы.
+"""
 import sqlite3
 from pprint import pprint
 
@@ -5,7 +8,6 @@ from pprint import pprint
 try:
     connection = sqlite3.connect('db.sqlite3')
     cursor = connection.cursor()
-    print('Successful connection to DB!')
 
     sqlite_select_tables = (
         """
@@ -16,7 +18,7 @@ try:
     record = cursor.fetchall()
 
     for row in record:
-        print(row)
+        pprint(row)
 
     cursor.close()
 except Exception as e:
@@ -24,4 +26,3 @@ except Exception as e:
 finally:
     if connection:
         connection.close()
-        print('Connection to DB was closed!')

@@ -23,7 +23,6 @@ def parse_csv(path):
 
     return list_
 
-
 def load_csv(table, list_):
     """
     Загружает информацию в базу данных:
@@ -37,7 +36,7 @@ def load_csv(table, list_):
 
         connection = sqlite3.connect('db.sqlite3')
         cursor = connection.cursor()
-        print('Successful connection to DB!')
+        print(f'Successful connection to DB {table}!')
 
         query = f"""
             INSERT INTO {table}
@@ -56,7 +55,7 @@ def load_csv(table, list_):
     finally:
         if connection:
             connection.close()
-            print('Connection to DB was closed!')
+            print(f'Connection to DB {table} was closed!')
 
 
 def main():
