@@ -1,5 +1,5 @@
 """
-Модели, в которые происходит загрузка:
+Таблицы, в которые происходит загрузка:
     category,
     genre
 """
@@ -59,15 +59,19 @@ def load_csv(table, list_):
 
 
 def main():
-    load_csv(
-        table='titles_category',
-        list_=parse_csv('data/category.csv'),
-    ) 
-    load_csv(
-        table='titles_genre',
-        list_=parse_csv('data/genre.csv')
-    )
-
+    try:
+        load_csv(
+            table='titles_category',
+            list_=parse_csv('data/category.csv'),
+        ) 
+        load_csv(
+            table='titles_genre',
+            list_=parse_csv('data/genre.csv')
+        )
+    except Exception as e:
+        print(e)
+    else:
+        print('Data was exported. No issues were detected')
 
 if __name__ == '__main__':
     main()

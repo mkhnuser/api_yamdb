@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'titles',
     'users',
+    'auth_app',
 ]
 
 MIDDLEWARE = [
@@ -73,6 +74,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1200),
 }
 
