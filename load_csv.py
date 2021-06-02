@@ -1,29 +1,74 @@
+"""
+Модели, в которые происходит загрузка:
+    category,
+    genre
+"""
 from pprint import pprint
 import sqlite3
 
 
-with open(file=r'data/users.csv', mode='r') as users_file:
-    users_list = [i.rstrip('\n').rstrip(',,,').split(',') for i in users_file]
-    pprint(users_list)
+def parse_csv(path):
+    """
+    Извлекает данные из data/.
+    Возвращает коллекцию вложенных списков вида:
+    [[row1], [row2], [row3], ...]
+    """
+    # users.csv - другой формат (,,, в конце)
+    if path != 'data/users.csv':
+        with open(file=path, mode='r') as f:
+            list_ = [i.rstrip('\n').split(',') for i in f]
+
+    with open(file=path, mode='r') as f:
+        list_ = [i.rstrip('\n').rstrip(',,,').split(',') for i in f]
+
+    return list_
 
 
-try:
-    connection = sqlite3.connect('db.sqlite3')
-    cursor = connection.cursor()
-    print('Successful connection to DB!')
+def load_csv(table, list_):
+    """
+    Загружает информацию в базу данных:
+        table - таблица, в которую загружаются данные;
+        fields - колонки, которые будут использованы;
+        to_db - строки, которые будут отправлены;
+    """
+    try:
+        fields = ', '.join(list_[:1][0])
+        to_db = list_[1:]
 
-    pprint(users_list[1:])
-    
-    cursor.executemany(
+        connection = sqlite3.connect('db.sqlite3')
+        cursor = connection.cursor()
+        print('Successful connection to DB!')
+
+        query = f"""
+            INSERT INTO {table}
+            ({fields})
+            VALUES ({', '.join(['?']*len(to_db[0]))});
         """
-        INSERT INTO auth_user (id, username, email)
-        VALUES (?, ?, ?)
-        """, [lst[:3] for lst in users_list[1:]]
-    )
-    cursor.close()
-except Exception as e:
-    print(e)
-finally:
-    if connection:
+        print(query)
+
+        cursor.executemany(
+            query, to_db
+        )
+        connection.commit()
         connection.close()
-        print('Connection to DB was closed!')
+    except Exception as e:
+        print(e)
+    finally:
+        if connection:
+            connection.close()
+            print('Connection to DB was closed!')
+
+
+def main():
+    load_csv(
+        table='titles_category',
+        list_=parse_csv('data/category.csv'),
+    ) 
+    load_csv(
+        table='titles_genre',
+        list_=parse_csv('data/genre.csv')
+    )
+
+
+if __name__ == '__main__':
+    main()

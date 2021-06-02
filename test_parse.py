@@ -18,28 +18,6 @@ try:
     for row in record:
         print(row)
 
-    sqlite_select_info = (
-        """
-        SELECT * FROM sqlite_master;
-        """
-    )
-    cursor.execute(sqlite_select_info)
-    record = cursor.fetchall()
-
-    for row in record:
-        pprint(row)
-
-    sqlite_select_auth = (
-        """
-        SELECT * FROM auth_user;
-        """
-    )
-    cursor.execute(sqlite_select_auth)
-    record = cursor.fetchall()
-
-    for row in record:
-        pprint(row)
-
     cursor.close()
 except Exception as e:
     print(e)
