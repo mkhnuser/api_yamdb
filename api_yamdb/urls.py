@@ -9,7 +9,7 @@ urlpatterns = [
         TemplateView.as_view(template_name='redoc.html'),
         name='redoc'
     ),
-    path('api/v1/auth/', include('auth.urls')),
+    # path('api/v1/auth/', include('auth_app.urls')),
     # path('api/v1/users/', include('users.urls')),
     path('api/v1/', include('titles.urls')),
 ]

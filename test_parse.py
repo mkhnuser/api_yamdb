@@ -11,7 +11,18 @@ try:
 
     sqlite_select_tables = (
         """
-        SELECT name FROM sqlite_master WHERE type='table';
+        SELECT * FROM sqlite_master WHERE type='table';
+        """
+    )
+    cursor.execute(sqlite_select_tables)
+    record = cursor.fetchall()
+
+    for row in record:
+        pprint(row)
+
+    sqlite_select_tables = (
+        """
+        SELECT * FROM users_user;
         """
     )
     cursor.execute(sqlite_select_tables)

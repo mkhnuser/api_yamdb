@@ -73,5 +73,6 @@ def main():
     else:
         print('Data was exported. No issues were detected')
 
+
 if __name__ == '__main__':
     main()
