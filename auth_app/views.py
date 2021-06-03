@@ -1,12 +1,14 @@
+from rest_framework import authentication
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.tokens import default_token_generator
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic.base import View
 from users.models import User
 from http import HTTPStatus
 import os
 
 
-class EmailCodeVerification(View):
+class EmailCodeVerificationView(View):
     """
     Отсылает письмо с кодом на email, который был указан в POST запросе,
     но только, если пользователь предоставил email и был зарегистрирован.
@@ -30,3 +32,46 @@ class EmailCodeVerification(View):
             )
             return HttpResponse('Verification code was sent. Please, check your email!', status=HTTPStatus.OK)
         return HttpResponse('Specified email already was registered.', status=HTTPStatus.BAD_REQUEST)
+
+
+
+class TokenPairView:
+    def get_tokens_for_user(user):
+        refresh = RefreshToken.for_user(user)
+        data = {
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+        }
+        return data
+
+
+class AuthenticationView(View):
+    def post(self, request):
+        user_email = request.POST.get('email')
+        confirmation_code = request.POST.get('confirmation_code')
+
+        if not user_email or not confirmation_code:
+            return HttpResponse('See you later, alligator!', status=HTTPStatus.BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=user_email)
+        except Exception as e:
+            print(e)
+
+        
+        is_valid_user = user_email == user.email
+        is_valid_confirmation_code = default_token_generator.check_token(
+            user=user,
+            token=confirmation_code
+        )
+
+        if is_valid_user and is_valid_confirmation_code:
+            return JsonResponse(
+                TokenPairView.get_tokens_for_user(user=user),
+                status=HTTPStatus.OK
+            )
+        print(user_email)
+        print(confirmation_code)
+        print(is_valid_user)
+        print(is_valid_confirmation_code)
+        return HttpResponse('Error!', status=HTTPStatus.BAD_REQUEST)
