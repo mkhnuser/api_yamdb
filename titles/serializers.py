@@ -20,6 +20,8 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class GenreTitleSerializer(serializers.ModelSerializer):
+    
+    genre = GenreSerializer(read_only=True)
     class Meta:
         model = GenreTitle
         fields = ('genre', 'title')
@@ -28,7 +30,7 @@ class GenreTitleSerializer(serializers.ModelSerializer):
 class TitleSerializer(serializers.ModelSerializer):
 
     category = CategotySerializer(read_only=True)
-    genre = GenreTitleSerializer(many=True, read_only=True)
+    genre = GenreSerializer(many=True, read_only=True)
 
     class Meta:
         model = Title
@@ -45,19 +47,21 @@ class TitleCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Title
         fields = ('__all__')  
+    
     """
     def create(self, validated_data):
         genres = validated_data.pop('genre')
+        category = validated_data.pop('category')
         title = self.Meta.model.objects.create(**validated_data)
         print(genres)
         for slug in genres:
             genre_obj, _ = Genre.objects.get_or_create(slug=slug)
             genre_title = GenreSerializer(data={'slug': slug})
-            title.genre.add(genre_obj)
+            title.genres.add(genre_obj)
 
         title.save()
         return title  
-
     """
+    
 
         

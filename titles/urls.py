@@ -45,6 +45,5 @@ urlpatterns = [
          name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(),
          name='token_refresh'),
-    #path('titles', title_views.TitleView.as_view()),
     path('', include(router.urls)),
     ]
