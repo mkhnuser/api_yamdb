@@ -6,4 +6,5 @@ from . import views as user_views
 urlpatterns = [
     path('', user_views.BaseUserViewSet.as_view()),
     path('<str:username>/', user_views.SingleUserViewSet.as_view()),
+    path('me/', user_views.MeUserViewSet.as_view()),
 ]

@@ -1,4 +1,4 @@
-from django.shortcuts import get_list_or_404
+from django.shortcuts import get_list_or_404, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from users.models import User
@@ -11,8 +11,8 @@ class BaseUserViewSet(APIView):
         username = request.POST.get('username')
 
         if username:
-            queryset = get_list_or_404(User.objects.all().filter(username=username))
-            serializer = UserSerializer(queryset, many=True)
+            user = get_object_or_404(User, username=username)
+            serializer = UserSerializer(user)
             return Response(serializer.data, status=HTTPStatus.OK)
 
         queryset = User.objects.all()
@@ -32,9 +32,42 @@ class BaseUserViewSet(APIView):
 
 class SingleUserViewSet(APIView):
     def get(self, request, username:str=None, format=None):
-        queryset = get_list_or_404(User.objects.all().filter(username=username))
-        serializer = UserSerializer(queryset, many=True)
+        user = get_object_or_404(User, username=username)
+        serializer = UserSerializer(user)
         return Response(serializer.data, status=HTTPStatus.OK)
 
     def patch(self, request, username, format=None):
-        pass
+        user = get_object_or_404(User, username=username)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=HTTPStatus.OK)
+        return Response(serializer.errors, status=HTTPStatus.BAD_REQUEST)
+
+    def delete(self, request, username, format=None):
+        user = get_object_or_404(User, username=username)
+        user.delete()
+        return Response(status=HTTPStatus.NO_CONTENT)
+
+
+class MeUserViewSet(APIView):
+    def get(self, request, username, format=None):
+        if request.user.username != username:
+            return HttpResponse(status=HTTPStatus.BAD_REQUEST)
+
+        user = get_object_or_404(User, username=username)
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=HTTPStatus.OK)
+
+    def patch(self, request, username, format=None):
+        if request.user.username != username:
+            return HttpResponse(status=HTTPStatus.BAD_REQUEST)
+
+        user = get_object_or_404(User, username=username)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=HTTPStatus.OK)
+        return Response(serializer.errors, status=HTTPStatus.BAD_REQUEST)

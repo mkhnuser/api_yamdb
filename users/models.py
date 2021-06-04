@@ -4,6 +4,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils.translation import ugettext_lazy as _
 from .managers import UserManager
+import uuid
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -13,6 +14,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(_('surname'), max_length=30, blank=True)
     bio = models.TextField(max_length=220)
     role = models.CharField(max_length=30, default='user')
+    uuid_field = models.UUIDField(default=uuid.uuid4, unique=True)
 
     objects = UserManager()
 
