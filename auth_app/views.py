@@ -1,4 +1,3 @@
-from rest_framework import authentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpResponse, JsonResponse
@@ -70,8 +69,4 @@ class AuthenticationView(View):
                 TokenPairView.get_tokens_for_user(user=user),
                 status=HTTPStatus.OK
             )
-        print(user_email)
-        print(confirmation_code)
-        print(is_valid_user)
-        print(is_valid_confirmation_code)
         return HttpResponse('Error!', status=HTTPStatus.BAD_REQUEST)
