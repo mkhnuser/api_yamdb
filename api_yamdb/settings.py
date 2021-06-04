@@ -69,7 +69,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.AllowAny',
     ],
 }
 
@@ -77,7 +77,7 @@ AUTH_USER_MODEL = 'users.User'
 
 SIMPLE_JWT = {
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1200),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10**10),
 }
 
 EMAIL_USE_TLS = True

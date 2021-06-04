@@ -3,14 +3,7 @@ from django.urls import path, include
 from . import views as user_views
 
 
-# router = routers.DefaultRouter()
-# router.register(
-#     r'users',
-#     user_views.UserViewSet,
-#     basename='users'
-# )
-
-
 urlpatterns = [
-    # path('', include(router.urls)),
+    path('', user_views.BaseUserViewSet.as_view()),
+    path('<str:username>/', user_views.SingleUserViewSet.as_view()),
 ]

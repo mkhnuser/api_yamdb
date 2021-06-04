@@ -8,14 +8,14 @@ import os
 
 
 class EmailCodeVerificationView(View):
-    """
-    Отсылает письмо с кодом на email, который был указан в POST запросе,
-    но только, если пользователь предоставил email и был зарегистрирован.
-    """
     def post(self, request):
         user_email = request.POST.get('email')
+
         if not user_email:
-            return HttpResponse('See you later, alligator!', status=HTTPStatus.BAD_REQUEST)
+            return HttpResponse(
+                'See you later, alligator!',
+                status=HTTPStatus.BAD_REQUEST
+            )
 
         try:
             user = User.objects.create(
@@ -29,8 +29,14 @@ class EmailCodeVerificationView(View):
                 message=default_token_generator.make_token(user),
                 from_email=os.getenv('EMAIL_NAME'),
             )
-            return HttpResponse('Verification code was sent. Please, check your email!', status=HTTPStatus.OK)
-        return HttpResponse('Specified email already was registered.', status=HTTPStatus.BAD_REQUEST)
+            return HttpResponse(
+                'Verification code was sent. Please, check your email!',
+                status=HTTPStatus.OK
+            )
+        return HttpResponse(
+                'Specified email already was registered.',
+                status=HTTPStatus.BAD_REQUEST
+        )
 
 
 
@@ -50,7 +56,10 @@ class AuthenticationView(View):
         confirmation_code = request.POST.get('confirmation_code')
 
         if not user_email or not confirmation_code:
-            return HttpResponse('See you later, alligator!', status=HTTPStatus.BAD_REQUEST)
+            return HttpResponse(
+                'See you later, alligator!',
+                status=HTTPStatus.BAD_REQUEST
+            )
 
         try:
             user = User.objects.get(email=user_email)

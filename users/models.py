@@ -8,7 +8,7 @@ from .managers import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email'), unique=True)
-    username = models.CharField(_('username'), max_length=60, blank=False)
+    username = models.CharField(_('username'), max_length=60, blank=False, unique=True)
     first_name = models.CharField(_('name'), max_length=30, blank=True)
     last_name = models.CharField(_('surname'), max_length=30, blank=True)
     bio = models.TextField(max_length=220)
