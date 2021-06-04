@@ -2,7 +2,7 @@ from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework import pagination, filters, mixins, authentication, generics
 from django.shortcuts import get_object_or_404
 from .models import Category, Genre, Title
-from .serializers import CategotySerializer, GenreSerializer, TitleSerializer
+from .serializers import CategotySerializer, GenreSerializer, TitleSerializer, TitleCreateSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -27,6 +27,13 @@ class GenreViewSet(viewsets.ModelViewSet):
     pagination_class = pagination.PageNumberPagination 
     lookup_field = 'slug'  
 
+class MultiSerializerViewSetMixin(object):
+    def get_serializer_class(self):       
+        try:
+            return self.serializer_action_classes[self.action]
+        except (KeyError, AttributeError):
+            return super(MultiSerializerViewSetMixin, self).get_serializer_class()
+
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
@@ -36,6 +43,21 @@ class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     pagination_class = pagination.PageNumberPagination 
     #lookup_field = 'slug'    
+    serializer_action_classes = {
+            'list': TitleSerializer,
+            'create': TitleCreateSerializer,
+            'retrieve': TitleSerializer,
+            #'update': MySerializer,
+            #'partial_update': MySerializer,
+            # etc.
+        }
+
+    def get_serializer_class(self):       
+        try:
+            #print(self.serializer_action_classes[self.action])
+            return self.serializer_action_classes[self.action]
+        except (KeyError, AttributeError):
+            return TitleSerializer
 
 
     

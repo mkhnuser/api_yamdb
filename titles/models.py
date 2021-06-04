@@ -34,6 +34,7 @@ class Title(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, null=True)
     genres = models.ManyToManyField('Genre', through='GenreTitle')
+    description = models.TextField(verbose_name='description', null=True)
 
     class Meta:
         verbose_name = 'Title'
