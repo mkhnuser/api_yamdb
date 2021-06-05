@@ -6,6 +6,7 @@ from .serializers import CategotySerializer, GenreSerializer, TitleSerializer, T
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from .filters import TitleFilter
 
 class CategoryViewSet(viewsets.GenericViewSet,
                     mixins.ListModelMixin,
@@ -41,7 +42,8 @@ class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     pagination_class = pagination.PageNumberPagination 
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['category','genre','name','year'] 
+    #filter_fields = ['category','genre','name','year'] 
+    filterset_class = TitleFilter
     serializer_action_classes = {
             'list': TitleSerializer,
             'create': TitleCreateSerializer,
@@ -52,7 +54,6 @@ class TitleViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):       
         try:
-            #print(self.serializer_action_classes[self.action])
             return self.serializer_action_classes[self.action]
         except (KeyError, AttributeError):
             return TitleSerializer
