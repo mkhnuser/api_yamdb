@@ -5,6 +5,7 @@ from django.views.generic.base import View
 from django.core.mail import send_mail
 from users.models import User
 from http import HTTPStatus
+from pprint import pprint
 import os
 import uuid
 
@@ -28,7 +29,7 @@ class EmailCodeVerificationView(View):
                 recipient_list=[str(user_email)]
             )
         except Exception as e:
-            print(e)
+            pprint(e)
             return HttpResponse(
                 'We have some troubles with email sending. Please, try later!',
                 status=HTTPStatus.INTERNAL_SERVER_ERROR
@@ -44,7 +45,7 @@ class EmailCodeVerificationView(View):
                     uuid_field=user_uuid
                 )
             except Exception as e:
-                print(e)
+                pprint(e)
                 return HttpResponse(
                         'Specified email already was registered.',
                         status=HTTPStatus.BAD_REQUEST
@@ -70,14 +71,15 @@ class AuthenticationView(View):
         try:
             user = User.objects.get(email=user_email)
         except Exception as e:
-            print(e)
+            pprint(e)
             return HttpResponse(
                 'User with specified email does not exist!',
                 status=HTTPStatus.BAD_REQUEST
             )
 
         is_valid_user = user_email == user.email
-        # Изменяет тип, чтобы сравнить: по умолчанию - uuid class instance
+        # Изменяем тип поля uuid_field,
+        # т.к. по умолчанию это UUID class instance
         is_valid_confirmation_code = str(user.uuid_field) == confirmation_code
 
         if is_valid_user and is_valid_confirmation_code:
@@ -85,7 +87,10 @@ class AuthenticationView(View):
                 TokenPairView.get_tokens_for_user(user=user),
                 status=HTTPStatus.OK
             )
-        return HttpResponse('Error! You passed wrong credentials.', status=HTTPStatus.BAD_REQUEST)
+        return HttpResponse(
+            'Error! You passed wrong credentials.',
+            status=HTTPStatus.BAD_REQUEST
+        )
 
 
 class TokenPairView:

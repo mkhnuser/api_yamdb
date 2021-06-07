@@ -1,6 +1,3 @@
-"""
-Цель этого файла - заменить sqlite3 client. Здесь можно писать SQL запросы.
-"""
 import sqlite3
 from pprint import pprint
 
@@ -20,20 +17,9 @@ try:
     for row in record:
         pprint(row)
 
-    sqlite_select_tables = (
-        """
-        SELECT * FROM users_user;
-        """
-    )
-    cursor.execute(sqlite_select_tables)
-    record = cursor.fetchall()
-
-    for row in record:
-        pprint(row)
-
     cursor.close()
 except Exception as e:
-    print(e)
+    pprint(e)
 finally:
     if connection:
         connection.close()

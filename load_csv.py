@@ -9,17 +9,17 @@ import sqlite3
 
 def parse_csv(path):
     """
-    Извлекает данные из data/.
+    Извлекает данные из директории data/.
     Возвращает коллекцию вложенных списков вида:
     [[row1], [row2], [row3], ...]
     """
     # users.csv - другой формат (,,, в конце)
-    if path != 'data/users.csv':
+    if path == 'data/users.csv':
         with open(file=path, mode='r') as f:
-            list_ = [i.rstrip('\n').split(',') for i in f]
+            list_ = [i.rstrip('\n').rstrip(',,,').split(',') for i in f]
 
     with open(file=path, mode='r') as f:
-        list_ = [i.rstrip('\n').rstrip(',,,').split(',') for i in f]
+        list_ = [i.rstrip('\n').split(',') for i in f]
 
     return list_
 
@@ -51,7 +51,7 @@ def load_csv(table, list_):
         connection.commit()
         connection.close()
     except Exception as e:
-        print(e)
+        pprint(e)
     finally:
         if connection:
             connection.close()
@@ -69,9 +69,9 @@ def main():
             list_=parse_csv('data/genre.csv')
         )
     except Exception as e:
-        print(e)
+        pprint(e)
     else:
-        print('Data was exported. No issues were detected')
+        print('Data was exported. No issues were detected.')
 
 
 if __name__ == '__main__':
