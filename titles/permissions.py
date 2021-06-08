@@ -23,3 +23,14 @@ class CustomRolePermissions(permissions.BasePermission):
         if user_methods and request.method in user_methods:
             return True
         return False
+
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        if request.user.is_anonymous:
+            return False
+        if request.user.role in ('moderator', 'admin') or request.user == obj.author:
+            return True
+        return False

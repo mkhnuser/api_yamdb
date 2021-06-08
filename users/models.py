@@ -19,6 +19,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(_('surname'), max_length=30, blank=True)
     bio = models.TextField(max_length=220, blank=True)
     role = models.CharField(max_length=30, blank=True, default='user')
+    is_staff = models.BooleanField(default=False)
     uuid_field = models.UUIDField(default=uuid.uuid4, unique=True)
 
     objects = UserManager()
@@ -27,8 +28,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']
 
     class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
+        ordering = ('-id',)
+        verbose_name = _('user',)
+        verbose_name_plural = _('users',)
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
