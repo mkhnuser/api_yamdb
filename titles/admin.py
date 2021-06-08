@@ -1,5 +1,8 @@
 from django.contrib import admin
+
 from .models import Category, Genre, Title
+
+# Register your models here.
 
 
 class CategoryAdmin(admin.ModelAdmin):

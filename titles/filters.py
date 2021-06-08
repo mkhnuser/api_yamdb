@@ -1,12 +1,15 @@
-from rest_framework import generics
 from django_filters import rest_framework as filters
 
-from .models import Genre, Category, Title
+from .models import Title
 
 
 class TitleFilter(filters.FilterSet):
-    genre = filters.filters.CharFilter(field_name="genre__slug", method='filter_genre')
-    category = filters.filters.CharFilter(field_name="category__slug", method='filter_category')
+    genre = filters.filters.CharFilter(
+        field_name="genre__slug", method='filter_genre')
+    category = filters.filters.CharFilter(
+        field_name="category__slug", method='filter_category')
+    name = filters.filters.CharFilter(
+        field_name="name", lookup_expr='icontains')
 
     class Meta:
         model = Title
