@@ -23,6 +23,7 @@ def parse_csv(path):
 
     return list_
 
+
 def load_csv(table, list_):
     """
     Загружает информацию в базу данных:
@@ -63,7 +64,7 @@ def main():
         load_csv(
             table='titles_category',
             list_=parse_csv('data/category.csv'),
-        ) 
+        )
         load_csv(
             table='titles_genre',
             list_=parse_csv('data/genre.csv')

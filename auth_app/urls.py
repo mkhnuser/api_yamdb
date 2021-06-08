@@ -8,10 +8,14 @@ from .views import EmailCodeVerificationView, AuthenticationView
 
 
 urlpatterns = [
-    path('token/', csrf_exempt(AuthenticationView.as_view()), name='token-obtain'),
     path(
-        'email/', 
-        csrf_exempt(EmailCodeVerificationView.as_view()), 
+        'token/',
+        csrf_exempt(AuthenticationView.as_view()),
+        name='token-obtain'
+    ),
+    path(
+        'email/',
+        csrf_exempt(EmailCodeVerificationView.as_view()),
         name='email-verification'
     ),
     path(

@@ -1,5 +1,4 @@
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpResponse, JsonResponse
 from django.views.generic.base import View
 from django.core.mail import send_mail
@@ -47,8 +46,8 @@ class EmailCodeVerificationView(View):
             except Exception as e:
                 pprint(e)
                 return HttpResponse(
-                        'Specified email already was registered.',
-                        status=HTTPStatus.BAD_REQUEST
+                    'Specified email already was registered.',
+                    status=HTTPStatus.BAD_REQUEST
                 )
             else:
                 return HttpResponse(
