@@ -1,7 +1,4 @@
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from rest_framework_simplejwt.views import TokenRefreshView
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import path
 from .views import EmailCodeVerificationView, AuthenticationView
