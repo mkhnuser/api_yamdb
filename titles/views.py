@@ -1,19 +1,18 @@
+from django.db.models import Avg
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import (filters, mixins,
-                            pagination, permissions, viewsets)
+from rest_framework import filters, mixins, pagination, permissions, viewsets
+from rest_framework.generics import (ListCreateAPIView,
+                                     RetrieveUpdateDestroyAPIView)
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .filters import TitleFilter
-from .models import Category, Genre, Title, Review, Comment
+from .models import Category, Comment, Genre, Review, Title
 from .permissions import CustomRolePermissions, IsOwnerOrReadOnly
-from .serializers import (CategotySerializer, GenreSerializer,
-                          TitleCreateSerializer, TitleSerializer,
-                          ReviewSerializer, CommentSerializer)
-from django.shortcuts import get_object_or_404
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from django.db.models import Avg
+from .serializers import (CategotySerializer, CommentSerializer,
+                          GenreSerializer, ReviewSerializer,
+                          TitleCreateSerializer, TitleSerializer)
 
-# from apps.account.permissions import IsAuthorOrReadOnlyPermission
 
 
 class CategoryViewSet(viewsets.GenericViewSet,
@@ -68,10 +67,6 @@ class TitleViewSet(viewsets.ModelViewSet):
             return self.serializer_action_classes[self.action]
         except (KeyError, AttributeError):
             return TitleSerializer
-
-    #def get_queryset(self):
-    #    return Title.objects.annotate(rating=Avg('reviews__score'))
-        
 
 
 class ReviewListAPIView(ListCreateAPIView):
