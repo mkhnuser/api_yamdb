@@ -11,6 +11,7 @@ from .serializers import (CategotySerializer, GenreSerializer,
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from django.db.models import Avg
 
 # from apps.account.permissions import IsAuthorOrReadOnlyPermission
 
@@ -67,6 +68,10 @@ class TitleViewSet(viewsets.ModelViewSet):
             return self.serializer_action_classes[self.action]
         except (KeyError, AttributeError):
             return TitleSerializer
+
+    #def get_queryset(self):
+    #    return Title.objects.annotate(rating=Avg('reviews__score'))
+        
 
 
 class ReviewListAPIView(ListCreateAPIView):
