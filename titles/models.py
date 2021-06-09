@@ -52,47 +52,61 @@ class GenreTitle(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['genre', 'title'], name='composite_key')
+                fields=('genre', 'title'), name='composite_key')
         ]
+
+    def __str__(self):
+        return f"{self.genre}--{self.title}"
 
 
 class Review(models.Model):
     title = models.ForeignKey(
         'titles.Title',
-        verbose_name='Объект обзора',
+        verbose_name='Review',
         on_delete=models.CASCADE,
         related_name='reviews'
     )
-    text = models.TextField('Текст')
+    text = models.TextField(verbose_name='Text')
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        verbose_name='Автор',
+        verbose_name='Author',
         on_delete=models.CASCADE,
         related_name='reviews'
     )
     score = models.PositiveSmallIntegerField(
-        'Оценка',
+        'Score',
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
-    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+    pub_date = models.DateTimeField('Pub date', auto_now_add=True)
+        
 
     class Meta:
-        verbose_name = 'Обзор'
-        verbose_name_plural = 'Обзоры'
+        verbose_name = 'Review'
+        verbose_name_plural = 'Reviews'        
+
+    def __str__(self):
+        return f"{self.title}--{self.author}"
 
 
 class Comment(models.Model):
     review = models.ForeignKey(
         Review,
-        verbose_name='Обзор',
+        verbose_name='Review',
         on_delete=models.CASCADE,
         related_name='comments'
     )
-    text = models.TextField('Текст')
+    text = models.TextField(verbose_name='Text')
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        verbose_name='Автор',
+        verbose_name='Author',
         on_delete=models.CASCADE,
         related_name='comments'
     )
-    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+    pub_date = models.DateTimeField('Pub date', auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'        
+
+    def __str__(self):
+        return f"{self.author}--{self.pub_date}"

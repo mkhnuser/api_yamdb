@@ -70,7 +70,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         attrs['title'] = get_object_or_404(
-            Title, id=self.context['view'].kwargs['title_id'])
+            Title, id=self.context['view'].kwargs.get('title_id'))
         if not self.partial and Review.objects.filter(
                 title=attrs['title'],
                 author=self.context['request'].user).exists():
@@ -89,7 +89,7 @@ class CommentSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         attrs['review'] = get_object_or_404(
             Review,
-            id=self.context['view'].kwargs['review_id'],
-            title_id=self.context['view'].kwargs['title_id']
+            id=self.context['view'].kwargs.get('review_id'),
+            title_id=self.context['view'].kwargs.get('title_id')
         )
         return attrs
