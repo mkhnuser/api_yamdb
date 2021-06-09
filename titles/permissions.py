@@ -31,6 +31,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
         if request.user.is_anonymous:
             return False
-        if request.user.role in ('moderator', 'admin') or request.user == obj.author:
+        if (request.user.role in ('moderator', 'admin')
+                or request.user == obj.author):
             return True
         return False

@@ -1,4 +1,3 @@
-from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, pagination, permissions, viewsets
@@ -12,7 +11,6 @@ from .permissions import CustomRolePermissions, IsOwnerOrReadOnly
 from .serializers import (CategotySerializer, CommentSerializer,
                           GenreSerializer, ReviewSerializer,
                           TitleCreateSerializer, TitleSerializer)
-
 
 
 class CategoryViewSet(viewsets.GenericViewSet,

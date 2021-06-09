@@ -1,8 +1,3 @@
-"""
-Таблицы, в которые происходит загрузка:
-    category,
-    genre
-"""
 from pprint import pprint
 import sqlite3
 
