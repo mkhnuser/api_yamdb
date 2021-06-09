@@ -6,17 +6,17 @@ from .views import EmailCodeVerificationView, AuthenticationView
 
 urlpatterns = [
     path(
-        'token/',
+        'v1/auth/token/',
         csrf_exempt(AuthenticationView.as_view()),
         name='token-obtain'
     ),
     path(
-        'email/',
+        'v1/auth/email/',
         csrf_exempt(EmailCodeVerificationView.as_view()),
         name='email-verification'
     ),
     path(
-        'token/refresh/',
+        'v1/auth/token/refresh/',
         TokenRefreshView.as_view(),
         name='token-refresh'
     ),

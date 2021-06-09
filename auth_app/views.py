@@ -1,4 +1,5 @@
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.views.generic.base import View
 from django.core.mail import send_mail
@@ -15,17 +16,19 @@ class EmailCodeVerificationView(View):
 
         if not user_email:
             return HttpResponse(
-                'See you later, alligator!',
+                'See you later, alligator! Please, specify your email.',
                 status=HTTPStatus.BAD_REQUEST
             )
 
+        user_uuid = uuid.uuid4()
+
         try:
-            user_uuid = uuid.uuid4()
             send_mail(
                 subject='YamDB: Verification Code',
                 message=str(user_uuid),
                 from_email=os.getenv('EMAIL_NAME'),
-                recipient_list=[str(user_email)]
+                recipient_list=[str(user_email)],
+                fail_silently=False
             )
         except Exception as e:
             pprint(e)
@@ -33,27 +36,20 @@ class EmailCodeVerificationView(View):
                 'We have some troubles with email sending. Please, try later!',
                 status=HTTPStatus.INTERNAL_SERVER_ERROR
             )
-        # Регистрируем пользователя !только! в том случае,
-        # если письмо было отправлено (see else in try/except statements).
-        # Кстати, именно из-за этого был использован uuid - его можно
-        # генерировать без непосредственной модели юзера.
-        else:
-            try:
-                User.objects.create(
-                    email=user_email,
-                    uuid_field=user_uuid
-                )
-            except Exception as e:
-                pprint(e)
-                return HttpResponse(
-                    'Specified email already was registered.',
-                    status=HTTPStatus.BAD_REQUEST
-                )
-            else:
-                return HttpResponse(
-                    'Verification code was sent. Please, check your email!',
-                    status=HTTPStatus.OK
-                )
+        is_new_user = User.objects.get_or_create(
+            email=user_email,
+            uuid_field=user_uuid
+        )[1]
+        
+        if not is_new_user:
+            return HttpResponse(
+                'Specified email already was registered.',
+                status=HTTPStatus.BAD_REQUEST
+            )
+        return HttpResponse(
+            'Verification code was sent. Please, check your email!',
+            status=HTTPStatus.OK
+        )
 
 
 class AuthenticationView(View):
@@ -63,18 +59,11 @@ class AuthenticationView(View):
 
         if not user_email or not confirmation_code:
             return HttpResponse(
-                'See you later, alligator!',
+                'See you later, alligator! Please, specify your email.',
                 status=HTTPStatus.BAD_REQUEST
             )
 
-        try:
-            user = User.objects.get(email=user_email)
-        except Exception as e:
-            pprint(e)
-            return HttpResponse(
-                'User with specified email does not exist!',
-                status=HTTPStatus.BAD_REQUEST
-            )
+        user = get_object_or_404(User, email=user_email)
 
         is_valid_user = user_email == user.email
         # Изменяем тип поля uuid_field,
