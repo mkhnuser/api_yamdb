@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from users.custom_permission import HasAdminRole
+from users.permissions import HasAdminRole
 from users.models import User
 from users.serializers import UserSerializer
 from http import HTTPStatus

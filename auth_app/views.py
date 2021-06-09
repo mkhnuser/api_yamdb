@@ -5,7 +5,6 @@ from django.views.generic.base import View
 from django.core.mail import send_mail
 from users.models import User
 from http import HTTPStatus
-from pprint import pprint
 import os
 import uuid
 
@@ -31,7 +30,6 @@ class EmailCodeVerificationView(View):
                 fail_silently=False
             )
         except Exception as e:
-            pprint(e)
             return HttpResponse(
                 'We have some troubles with email sending. Please, try later!',
                 status=HTTPStatus.INTERNAL_SERVER_ERROR
