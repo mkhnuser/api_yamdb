@@ -19,11 +19,11 @@ class CategoryViewSet(viewsets.GenericViewSet,
                       mixins.DestroyModelMixin):
     queryset = Category.objects.all()
     serializer_class = CategotySerializer
-    filter_backends = (filters.SearchFilter)
-    search_fields = ('name')
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
-        CustomRolePermissions
+        CustomRolePermissions,
     )
     pagination_class = pagination.PageNumberPagination
     lookup_field = 'slug'
@@ -35,10 +35,10 @@ class GenreViewSet(viewsets.GenericViewSet,
                    mixins.DestroyModelMixin):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    filter_backends = (filters.SearchFilter)
-    search_fields = ('name', )
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly, CustomRolePermissions)
+        permissions.IsAuthenticatedOrReadOnly, CustomRolePermissions,)
     pagination_class = pagination.PageNumberPagination
     lookup_field = 'slug'
 
@@ -47,10 +47,10 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly, CustomRolePermissions)
+        permissions.IsAuthenticatedOrReadOnly, CustomRolePermissions,)
     pagination_class = pagination.PageNumberPagination
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    search_fields = ('name')
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
+    search_fields = ('name',)
     filterset_class = TitleFilter
     serializer_action_classes = {
         'list': TitleSerializer,
@@ -66,7 +66,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 
 class ReviewListAPIView(ListCreateAPIView):
-    permission_classes = (IsAuthenticatedOrReadOnly)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = ReviewSerializer
     queryset = Review.objects.all()
 
@@ -78,7 +78,7 @@ class ReviewListAPIView(ListCreateAPIView):
 
 
 class ReviewDetailAPIView(RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsOwnerOrReadOnly)
+    permission_classes = (IsOwnerOrReadOnly,)
     serializer_class = ReviewSerializer
 
     def get_object(self):
@@ -87,11 +87,12 @@ class ReviewDetailAPIView(RetrieveUpdateDestroyAPIView):
             title_id=self.kwargs.get('title_id'),
             id=self.kwargs.get('review_id')
         )
+        self.check_object_permissions(self.request, obj)
         return obj
 
 
 class CommentListAPIView(ListCreateAPIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
 
@@ -103,7 +104,7 @@ class CommentListAPIView(ListCreateAPIView):
 
 
 class CommentDetailAPIView(RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = (IsOwnerOrReadOnly,)
     serializer_class = CommentSerializer
 
     def get_object(self):
@@ -113,4 +114,5 @@ class CommentDetailAPIView(RetrieveUpdateDestroyAPIView):
             review_id=self.kwargs.get('review_id'),
             id=self.kwargs.get('comment_id')
         )
+        self.check_object_permissions(self.request, obj)
         return obj
