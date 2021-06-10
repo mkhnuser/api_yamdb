@@ -50,13 +50,15 @@ class GenreTitle(models.Model):
     title = models.ForeignKey(Title, on_delete=models.CASCADE)
 
     class Meta:
-        constraints = [
+        constraints = (
             models.UniqueConstraint(
-                fields=('genre', 'title'), name='composite_key')
-        ]
+                fields=('genre', 'title'),
+                name='composite_key'
+            ),
+        )
 
     def __str__(self):
-        return f"{self.genre}--{self.title}"
+        return f'{self.genre}--{self.title}'
 
 
 class Review(models.Model):
@@ -84,7 +86,7 @@ class Review(models.Model):
         verbose_name_plural = 'Reviews'
 
     def __str__(self):
-        return f"{self.title}--{self.author}"
+        return f'{self.title}--{self.author}'
 
 
 class Comment(models.Model):
@@ -108,4 +110,4 @@ class Comment(models.Model):
         verbose_name_plural = 'Comments'
 
     def __str__(self):
-        return f"{self.author}--{self.pub_date}"
+        return f'{self.author}--{self.pub_date}'

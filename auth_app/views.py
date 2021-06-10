@@ -34,12 +34,12 @@ class EmailCodeVerificationView(View):
                 'We have some troubles with email sending. Please, try later!',
                 status=HTTPStatus.INTERNAL_SERVER_ERROR
             )
-        is_new_user = User.objects.get_or_create(
+        _, is_created = User.objects.get_or_create(
             email=user_email,
             uuid_field=user_uuid
-        )[1]
+        )
 
-        if not is_new_user:
+        if not is_created:
             return HttpResponse(
                 'Specified email already was registered.',
                 status=HTTPStatus.BAD_REQUEST
@@ -64,8 +64,6 @@ class AuthenticationView(View):
         user = get_object_or_404(User, email=user_email)
 
         is_valid_user = user_email == user.email
-        # Изменяем тип поля uuid_field,
-        # т.к. по умолчанию это UUID class instance
         is_valid_confirmation_code = str(user.uuid_field) == confirmation_code
 
         if is_valid_user and is_valid_confirmation_code:
