@@ -29,7 +29,7 @@ class EmailCodeVerificationView(View):
                 recipient_list=[str(user_email)],
                 fail_silently=False
             )
-        except Exception as e:
+        except Exception:
             return HttpResponse(
                 'We have some troubles with email sending. Please, try later!',
                 status=HTTPStatus.INTERNAL_SERVER_ERROR
@@ -38,7 +38,7 @@ class EmailCodeVerificationView(View):
             email=user_email,
             uuid_field=user_uuid
         )[1]
-        
+
         if not is_new_user:
             return HttpResponse(
                 'Specified email already was registered.',

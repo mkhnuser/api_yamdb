@@ -61,8 +61,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     }
 
     def get_serializer_class(self):
-            return self.serializer_action_classes[self.action]
- 
+        return self.serializer_action_classes[self.action]
 
 
 class ReviewListAPIView(ListCreateAPIView):

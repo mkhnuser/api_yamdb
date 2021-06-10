@@ -78,11 +78,10 @@ class Review(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
     pub_date = models.DateTimeField('Pub date', auto_now_add=True)
-        
 
     class Meta:
         verbose_name = 'Review'
-        verbose_name_plural = 'Reviews'        
+        verbose_name_plural = 'Reviews'
 
     def __str__(self):
         return f"{self.title}--{self.author}"
@@ -106,7 +105,7 @@ class Comment(models.Model):
 
     class Meta:
         verbose_name = 'Comment'
-        verbose_name_plural = 'Comments'        
+        verbose_name_plural = 'Comments'
 
     def __str__(self):
         return f"{self.author}--{self.pub_date}"
